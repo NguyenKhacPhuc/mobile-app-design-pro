@@ -25,57 +25,51 @@ No more generic purple-gradient-with-Inter designs. Every output is intentional,
 
 ---
 
-## Live Samples
-
-Open these HTML files in your browser to see what the skill produces:
-
-### Fitness App — *FitPulse*
-> Dark theme, motion-driven, Power Red palette, Anton + Work Sans typography
+## Sample Outputs
 
 <p align="center">
-  <a href="samples/fitness-app.html">
-    <img src="https://img.shields.io/badge/Open_Demo-FitPulse-DC2626?style=for-the-badge&logo=html5&logoColor=white" alt="Open Fitness Demo">
-  </a>
+  <img src="samples/fitness-app.png" width="240" alt="FitPulse - Fitness App">&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="samples/finance-app.png" width="240" alt="VaultPay - Finance App">&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="samples/food-delivery-app.png" width="240" alt="BiteBuddy - Food Delivery App">
 </p>
-
-```
-Style:    Motion-Driven + Dark Mode OLED
-Palette:  Power Red (#DC2626, #F97316, #FBBF24)
-Fonts:    Anton / Work Sans
-Pattern:  Dashboard Hub with activity rings
-```
-
-### Finance App — *VaultPay*
-> Light theme, Soft UI Evolution, Trust Blue palette, DM Serif Display + DM Sans
 
 <p align="center">
-  <a href="samples/finance-app.html">
-    <img src="https://img.shields.io/badge/Open_Demo-VaultPay-1E40AF?style=for-the-badge&logo=html5&logoColor=white" alt="Open Finance Demo">
-  </a>
+  <b>FitPulse</b> &nbsp;&bull;&nbsp; <b>VaultPay</b> &nbsp;&bull;&nbsp; <b>BiteBuddy</b>
 </p>
 
-```
-Style:    Soft UI Evolution + Swiss Modernism
-Palette:  Trust Blue (#1E40AF, #059669, #D97706)
-Fonts:    DM Serif Display / DM Sans
-Pattern:  Dashboard Hub with credit card
-```
+Each design is generated from a single prompt. The skill automatically selects the right style, colors, typography, and layout patterns based on the app's industry.
 
-### Food Delivery App — *BiteBuddy*
-> Warm theme, Flat Design, Warm Appetite palette, Baloo 2 + Poppins
+### FitPulse — Fitness App
+> `"Design a fitness tracking app"`
 
-<p align="center">
-  <a href="samples/food-delivery-app.html">
-    <img src="https://img.shields.io/badge/Open_Demo-BiteBuddy-EF4444?style=for-the-badge&logo=html5&logoColor=white" alt="Open Food Demo">
-  </a>
-</p>
+| Property | Value |
+|----------|-------|
+| Style | Motion-Driven + Dark Mode OLED |
+| Palette | Power Red (`#DC2626`, `#F97316`, `#FBBF24`) |
+| Fonts | Anton / Work Sans |
+| Pattern | Dashboard Hub with activity rings |
 
-```
-Style:    Flat Design + Claymorphism accents
-Palette:  Warm Appetite (#EF4444, #F97316, #FBBF24)
-Fonts:    Baloo 2 / Poppins
-Pattern:  Tab-Based Feed with restaurant cards
-```
+### VaultPay — Finance App
+> `"Design a banking finance app"`
+
+| Property | Value |
+|----------|-------|
+| Style | Soft UI Evolution + Swiss Modernism |
+| Palette | Trust Blue (`#1E40AF`, `#059669`, `#D97706`) |
+| Fonts | DM Serif Display / DM Sans |
+| Pattern | Dashboard Hub with credit card |
+
+### BiteBuddy — Food Delivery App
+> `"Design a food delivery app"`
+
+| Property | Value |
+|----------|-------|
+| Style | Flat Design + Claymorphism accents |
+| Palette | Warm Appetite (`#EF4444`, `#F97316`, `#FBBF24`) |
+| Fonts | Baloo 2 / Poppins |
+| Pattern | Tab-Based Feed with restaurant cards |
+
+Interactive HTML demos are also available in the [`samples/`](samples/) folder — open them in your browser to see animations and navigation.
 
 ---
 
