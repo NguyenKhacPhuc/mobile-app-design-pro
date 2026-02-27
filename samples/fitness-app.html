@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitPulse - Fitness App Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; background: #1a1a2e; font-family: 'Work Sans', sans-serif;
+    padding: 20px;
+  }
+
+  .phone {
+    width: 375px; height: 812px; border-radius: 44px; border: 8px solid #111;
+    overflow: hidden; position: relative;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05) inset;
+    background: #0F0F0F;
+  }
+
+  .dynamic-island {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 32px; border-radius: 20px; background: #000; z-index: 100;
+  }
+
+  .status-bar {
+    height: 54px; padding: 14px 24px 0;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .status-bar span { font-size: 15px; font-weight: 600; color: #FAFAFA; }
+  .status-icons { display: flex; gap: 5px; align-items: center; }
+  .status-icons div { width: 16px; height: 10px; border-radius: 2px; background: #FAFAFA; }
+
+  .content {
+    height: calc(100% - 54px - 90px); overflow-y: auto; overflow-x: hidden;
+    padding: 0 20px; scrollbar-width: none;
+  }
+  .content::-webkit-scrollbar { display: none; }
+
+  .greeting { margin-top: 8px; }
+  .greeting .label { font-size: 14px; color: #9CA3AF; font-weight: 500; }
+  .greeting h1 { font-family: 'Anton', sans-serif; font-size: 32px; color: #FAFAFA; margin-top: 2px; }
+
+  .stats-row {
+    display: flex; gap: 12px; margin-top: 20px;
+  }
+  .stat-card {
+    flex: 1; background: #1A1A1A; border-radius: 16px; padding: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .stat-card .icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 10px; }
+  .stat-card .value { font-family: 'Anton', sans-serif; font-size: 24px; color: #FAFAFA; }
+  .stat-card .unit { font-size: 12px; color: #9CA3AF; margin-top: 2px; }
+
+  .fire-icon { background: linear-gradient(135deg, #DC2626, #F97316); }
+  .steps-icon { background: linear-gradient(135deg, #F97316, #FBBF24); }
+  .heart-icon { background: linear-gradient(135deg, #EF4444, #F472B6); }
+
+  .section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 28px; margin-bottom: 14px;
+  }
+  .section-header h2 { font-family: 'Anton', sans-serif; font-size: 20px; color: #FAFAFA; }
+  .section-header a { font-size: 13px; color: #F97316; text-decoration: none; font-weight: 600; }
+
+  .ring-container {
+    background: linear-gradient(135deg, #1A1A1A, #0F0F0F);
+    border-radius: 20px; padding: 24px; text-align: center;
+    border: 1px solid rgba(255,255,255,0.06); margin-top: 20px;
+    position: relative; overflow: hidden;
+  }
+  .ring-container::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(220,38,38,0.08), transparent 50%);
+  }
+  .ring-svg { width: 180px; height: 180px; transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: #2A2A2A; stroke-width: 12; }
+  .ring-progress { fill: none; stroke-width: 12; stroke-linecap: round; stroke-dasharray: 440; transition: stroke-dashoffset 1.5s ease; }
+  .ring-cal { stroke: #DC2626; stroke-dashoffset: 110; }
+  .ring-move { stroke: #F97316; stroke-dashoffset: 176; }
+  .ring-stand { stroke: #FBBF24; stroke-dashoffset: 88; }
+  .ring-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .ring-center .val { font-family: 'Anton', sans-serif; font-size: 36px; color: #FAFAFA; }
+  .ring-center .lbl { font-size: 12px; color: #9CA3AF; }
+  .ring-legend { display: flex; justify-content: center; gap: 20px; margin-top: 16px; position: relative; }
+  .ring-legend span { font-size: 12px; color: #9CA3AF; display: flex; align-items: center; gap: 6px; }
+  .ring-legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .workout-card {
+    background: #1A1A1A; border-radius: 16px; padding: 16px;
+    display: flex; align-items: center; gap: 14px; margin-bottom: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: transform 150ms ease, background 150ms ease;
+    cursor: pointer;
+  }
+  .workout-card:active { transform: scale(0.98); background: #222; }
+  .workout-thumb {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 24px;
+  }
+  .workout-info { flex: 1; }
+  .workout-info h3 { font-size: 15px; font-weight: 600; color: #FAFAFA; }
+  .workout-info p { font-size: 13px; color: #9CA3AF; margin-top: 3px; }
+  .workout-meta { text-align: right; }
+  .workout-meta .dur { font-size: 14px; font-weight: 600; color: #FAFAFA; }
+  .workout-meta .cal { font-size: 12px; color: #9CA3AF; }
+
+  .tab-bar {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 90px;
+    background: #0F0F0F; border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; justify-content: space-around; align-items: flex-start; padding-top: 10px;
+  }
+  .tab-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer; transition: transform 150ms ease;
+    background: none; border: none; padding: 4px 12px;
+  }
+  .tab-item:active { transform: scale(0.9); }
+  .tab-item svg { width: 24px; height: 24px; }
+  .tab-item span { font-size: 10px; font-weight: 500; }
+  .tab-item.active svg { stroke: #DC2626; }
+  .tab-item.active span { color: #DC2626; }
+  .tab-item:not(.active) svg { stroke: #6B7280; }
+  .tab-item:not(.active) span { color: #6B7280; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-in { animation: fadeUp 500ms cubic-bezier(0,0,0.2,1) both; }
+  .delay-1 { animation-delay: 60ms; }
+  .delay-2 { animation-delay: 120ms; }
+  .delay-3 { animation-delay: 180ms; }
+  .delay-4 { animation-delay: 240ms; }
+  .delay-5 { animation-delay: 300ms; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="dynamic-island"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons"><div></div><div></div><div style="width:22px; border-radius:3px;"></div></div>
+  </div>
+
+  <div class="content">
+    <div class="greeting animate-in">
+      <div class="label">Good Morning</div>
+      <h1>Alex Kim</h1>
+    </div>
+
+    <div class="ring-container animate-in delay-1" style="position:relative;">
+      <svg class="ring-svg" viewBox="0 0 160 160">
+        <circle class="ring-bg" cx="80" cy="80" r="70"/>
+        <circle class="ring-progress ring-cal" cx="80" cy="80" r="70"/>
+        <circle class="ring-bg" cx="80" cy="80" r="56"/>
+        <circle class="ring-progress ring-move" cx="80" cy="80" r="56"/>
+        <circle class="ring-bg" cx="80" cy="80" r="42"/>
+        <circle class="ring-progress ring-stand" cx="80" cy="80" r="42"/>
+      </svg>
+      <div class="ring-center">
+        <div class="val">78%</div>
+        <div class="lbl">Daily Goal</div>
+      </div>
+      <div class="ring-legend">
+        <span><span class="dot" style="background:#DC2626;"></span>Calories</span>
+        <span><span class="dot" style="background:#F97316;"></span>Move</span>
+        <span><span class="dot" style="background:#FBBF24;"></span>Stand</span>
+      </div>
+    </div>
+
+    <div class="stats-row animate-in delay-2">
+      <div class="stat-card">
+        <div class="icon fire-icon">
+          <svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2c0 4-4 6-4 10a4 4 0 008 0c0-4-4-6-4-10z"/></svg>
+        </div>
+        <div class="value">486</div>
+        <div class="unit">kcal burned</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon steps-icon">
+          <svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19h16M4 15h16M4 11h10M4 7h6"/></svg>
+        </div>
+        <div class="value">8,240</div>
+        <div class="unit">steps today</div>
+      </div>
+    </div>
+
+    <div class="section-header animate-in delay-3">
+      <h2>Today's Plan</h2>
+      <a href="#">See All</a>
+    </div>
+
+    <div class="workout-card animate-in delay-3">
+      <div class="workout-thumb" style="background:linear-gradient(135deg,#DC2626,#991B1B);">
+        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M6 4v16M18 4v16M6 12h12M2 8h4M18 8h4M2 16h4M18 16h4"/></svg>
+      </div>
+      <div class="workout-info">
+        <h3>Morning HIIT Blast</h3>
+        <p>Full Body - Intermediate</p>
+      </div>
+      <div class="workout-meta">
+        <div class="dur">20 min</div>
+        <div class="cal">320 cal</div>
+      </div>
+    </div>
+
+    <div class="workout-card animate-in delay-4">
+      <div class="workout-thumb" style="background:linear-gradient(135deg,#F97316,#EA580C);">
+        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div class="workout-info">
+        <h3>Core Crusher</h3>
+        <p>Abs & Core - Advanced</p>
+      </div>
+      <div class="workout-meta">
+        <div class="dur">15 min</div>
+        <div class="cal">180 cal</div>
+      </div>
+    </div>
+
+    <div class="workout-card animate-in delay-5">
+      <div class="workout-thumb" style="background:linear-gradient(135deg,#FBBF24,#D97706);">
+        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </div>
+      <div class="workout-info">
+        <h3>Evening Yoga Flow</h3>
+        <p>Flexibility - Beginner</p>
+      </div>
+      <div class="workout-meta">
+        <div class="dur">30 min</div>
+        <div class="cal">120 cal</div>
+      </div>
+    </div>
+
+    <div style="height: 20px;"></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-item active">
+      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="tab-item">
+      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <span>Explore</span>
+    </button>
+    <button class="tab-item">
+      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      <span>Activity</span>
+    </button>
+    <button class="tab-item">
+      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z"/></svg>
+      <span>Profile</span>
+    </button>
+  </div>
+</div>
+</body>
+</html>
