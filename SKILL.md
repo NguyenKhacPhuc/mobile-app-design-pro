@@ -14,6 +14,7 @@ Before writing ANY code:
 2. Read `./references/design-system.md` for component specs and platform guidelines
 3. Read `./references/theme-engine.md` for the complete style/color/typography database
 4. Read `./references/ux-animation.md` for animation patterns, micro-interactions, and motion design
+5. Read `asset-manager` skill for icon and font asset management (CDN lookup, font fetching, AI icon generation)
 
 ---
 
@@ -73,6 +74,23 @@ Use the **100 Industry-Specific Reasoning Rules** (in `./references/theme-engine
 │    [ ] Realistic content (no Lorem ipsum)               │
 │    [ ] Phone frame renders correctly                    │
 └──────────────────────────────────────────────────────────┘
+```
+
+### Step 3: Generate Asset Plan
+
+After design system generation, use `asset-manager` to resolve icons and fonts:
+
+1. **Icon plan**: Run `generate-asset-plan.mjs` to map UI elements to real icons (Lucide/Material/Phosphor). Fetch via `fetch-icons.mjs`.
+2. **Font plan**: Use `asset-manager/references/font-pairings.md` to validate/enhance the theme engine's font recommendation. Fetch via `fetch-fonts.mjs`.
+3. **Custom icons**: For app-specific icons not in any CDN, mark for AI generation via `ai-multimodal` skill (Imagen 4).
+
+```bash
+# Generate asset plan from app description
+node ~/.claude/skills/asset-manager/scripts/generate-asset-plan.mjs --app "<app description>" --framework <target>
+# Fetch resolved icons
+node ~/.claude/skills/asset-manager/scripts/fetch-icons.mjs --icons "heart,star,home,..." --source lucide --output ./assets/icons/
+# Fetch fonts
+node ~/.claude/skills/asset-manager/scripts/fetch-fonts.mjs --fonts "Space Grotesk,DM Sans" --output ./fonts/ --format <target>
 ```
 
 **CRITICAL**: Present this design system to the user BEFORE writing code. Let them confirm or adjust.
@@ -192,16 +210,17 @@ ALWAYS wrap output in a realistic phone frame. The user must see a device, not a
 
 ### Implementation Rules
 
-1. **Font Loading**: Always import Google Fonts via `<style>` tag with `@import url(...)`
-2. **Design Tokens**: Define ALL colors, spacing, fonts as a `designSystem` object at the top
-3. **State**: Use `useState` for activeTab, currentScreen, form inputs, toggles, liked items
-4. **Navigation**: Working tab bar switching between 3-5 screens minimum
-5. **Animations**: CSS transitions on tab changes, button presses (scale 0.97), toggles, likes
-6. **Scroll**: Content scrolls independently inside phone frame
-7. **Realistic Data**: Use real-sounding names, prices, ratings, timestamps — never Lorem ipsum
-8. **Microinteractions**: Like/heart bounce, toggle slides, skeleton loading states
-9. **Multiple Screens**: Home, Detail/Feed, Search/Explore, Profile, Settings minimum
-10. **Touch Feedback**: Active/pressed states on all interactive elements
+1. **Font Loading**: Always import Google Fonts via `<style>` tag with `@import url(...)`. Use the Google Fonts URL from the asset plan.
+2. **Icons**: Use Lucide React icons (`lucide-react` CDN) or inline SVGs from the asset plan. NEVER use emoji as icons.
+3. **Design Tokens**: Define ALL colors, spacing, fonts as a `designSystem` object at the top
+4. **State**: Use `useState` for activeTab, currentScreen, form inputs, toggles, liked items
+5. **Navigation**: Working tab bar switching between 3-5 screens minimum
+6. **Animations**: CSS transitions on tab changes, button presses (scale 0.97), toggles, likes
+7. **Scroll**: Content scrolls independently inside phone frame
+8. **Realistic Data**: Use real-sounding names, prices, ratings, timestamps — never Lorem ipsum
+9. **Microinteractions**: Like/heart bounce, toggle slides, skeleton loading states
+10. **Multiple Screens**: Home, Detail/Feed, Search/Explore, Profile, Settings minimum
+11. **Touch Feedback**: Active/pressed states on all interactive elements
 
 ### Design Token Structure
 
