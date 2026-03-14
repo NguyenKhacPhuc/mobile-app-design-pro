@@ -14,7 +14,7 @@ Before writing ANY code:
 2. Read `./references/design-system.md` for component specs and platform guidelines
 3. Read `./references/theme-engine.md` for the complete style/color/typography database
 4. Read `./references/ux-animation.md` for animation patterns, micro-interactions, and motion design
-5. Read `asset-manager` skill for icon and font asset management (CDN lookup, font fetching, AI icon generation)
+5. Read `./asset-manager/SKILL.md` for icon and font asset management (CDN lookup, font fetching, AI icon generation)
 
 ---
 
@@ -81,16 +81,16 @@ Use the **100 Industry-Specific Reasoning Rules** (in `./references/theme-engine
 After design system generation, use `asset-manager` to resolve icons and fonts:
 
 1. **Icon plan**: Run `generate-asset-plan.mjs` to map UI elements to real icons (Lucide/Material/Phosphor). Fetch via `fetch-icons.mjs`.
-2. **Font plan**: Use `asset-manager/references/font-pairings.md` to validate/enhance the theme engine's font recommendation. Fetch via `fetch-fonts.mjs`.
+2. **Font plan**: Use `./asset-manager/references/font-pairings.md` to validate/enhance the theme engine's font recommendation. Fetch via `fetch-fonts.mjs`.
 3. **Custom icons**: For app-specific icons not in any CDN, mark for AI generation via `ai-multimodal` skill (Imagen 4).
 
 ```bash
 # Generate asset plan from app description
-node ~/.claude/skills/asset-manager/scripts/generate-asset-plan.mjs --app "<app description>" --framework <target>
+node ./asset-manager/scripts/generate-asset-plan.mjs --app "<app description>" --framework <target>
 # Fetch resolved icons
-node ~/.claude/skills/asset-manager/scripts/fetch-icons.mjs --icons "heart,star,home,..." --source lucide --output ./assets/icons/
+node ./asset-manager/scripts/fetch-icons.mjs --icons "heart,star,home,..." --source lucide --output ./assets/icons/
 # Fetch fonts
-node ~/.claude/skills/asset-manager/scripts/fetch-fonts.mjs --fonts "Space Grotesk,DM Sans" --output ./fonts/ --format <target>
+node ./asset-manager/scripts/fetch-fonts.mjs --fonts "Space Grotesk,DM Sans" --output ./fonts/ --format <target>
 ```
 
 **CRITICAL**: Present this design system to the user BEFORE writing code. Let them confirm or adjust.
